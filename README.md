@@ -57,7 +57,9 @@ Inspect `src/00_vars.sh` and set the number of THREADS you want your machine to 
     to generate a counts matrix under `src/results/counts`
 
 1. Run
-    > `source 01_common.sh && ./14_wilcoxon.r` to run this analysis for NF vs DCM and generate results under `src/results/wilcoxon_de`
+    > `source 01_common.sh && ./14_wilcoxon.r` 
+    
+    to run this analysis for NF vs DCM and generate results under `src/results/wilcoxon_de`
     
     Then, open `src/14_wilcoxon.r` manually. You will need to edit the source. Specifically, this block:
 
