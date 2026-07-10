@@ -48,13 +48,13 @@ Inspect `src/00_vars.sh` and set the number of THREADS you want your machine to 
     Check `src/results/hisat2_summary.csv` to get a count of library depth and alignment rates. Individual library stats are under `results/bam/SRRXXX` flagstat and hisat2.log files.
 
 1. Run
-    > `./12_featurecounts.sh`
-    > `./13_parse_featurecounts.r`
+    > `source 01_common.sh && ./12_featurecounts.sh`
+    > `source 01_common.sh && ./13_parse_featurecounts.r`
 
     to generate a counts matrix under `src/results/counts`
 
 1. Run
-        > `./14_wilcoxon.r` to run this analysis for NF vs DCM and generate results under `src/results/wilcoxon_de`
+        > `source 01_common.sh && ./14_wilcoxon.r` to run this analysis for NF vs DCM and generate results under `src/results/wilcoxon_de`
     
     Then, open `src/14_wilcoxon.r` manually. You will need to edit the source. Specifically, this block:
 
@@ -90,17 +90,17 @@ Inspect `src/00_vars.sh` and set the number of THREADS you want your machine to 
     and rerun the script for NF vs (ICM + DCM)
 
 1. Run
-    > `./15_create_heatmap.r`
+    > `source 01_common.sh && ./15_create_heatmap.r`
 
     to create a heatmap for NF vs DCM under `src/results/wilcoxon_de` with MIN_ABS_LFC < 0.585. Make the necessary adjustments for other combinations, and __REMEMBER to change `samples.tsv` to `disease_samples.tsv` for ICM+DCM.__
 
 1. Run
-    > `./16_ma_plot.py`
+    > `source 01_common.sh && ./16_ma_plot.py`
 
     to create an MA plot for NF vs DCM with MIN_ABS_LFC < 0.585. Make the necessary adjustments for other combinations, and __REMEMBER to change `samples.tsv` to `disease_samples.tsv` for ICM+DCM.__
 
 1. Run
-    > `./17_volcano.py`
+    > `source 01_common.sh && ./17_volcano.py`
 
     to create an volcano plot for NF vs DCM with MIN_ABS_LFC < 0.585. Make the necessary adjustments for other combinations, and __REMEMBER to change `samples.tsv` to `disease_samples.tsv` for ICM+DCM.__
 
