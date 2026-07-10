@@ -1,5 +1,12 @@
 # Bulk RNA-Seq for Public Heart Data
-Do not run `00_vars.sh` and `01_common.sh` manually.
+These scripts download the RNA-seq reads for the NCBI bioproject [PRJNA477855](https://www.ncbi.nlm.nih.gov/bioproject/477855), and perform the following:
+1. Downloading the data
+1. Quality control (FastQC)
+1. Adapter and reads trimming (fastp)
+1. Alignment (HISAT2)
+1. Feature counting (featureCounts)
+1. Differential expression (Wilcoxon)
+1. Visualization (heatmap, MA and volcano plots)
 
 # Script order and execution
 Install the conda environment: 
