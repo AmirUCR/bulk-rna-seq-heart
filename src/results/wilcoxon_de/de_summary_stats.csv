@@ -1,0 +1,7 @@
+comparison,fdr_thresh,log2FoldChange_thresh,num_up_in_disease,num_down_in_disease,num_total_sig
+NF_vs_ICM,0.05,0.585,991,747,1738
+NF_vs_ICM,0.05,1.0,288,171,459
+NF_vs_DCM,0.05,0.585,645,553,1198
+NF_vs_DCM,0.05,1.0,174,140,314
+NF_vs_ICM_DCM,0.05,0.585,715,604,1319
+NF_vs_ICM_DCM,0.05,1.0,187,147,334
