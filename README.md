@@ -50,7 +50,7 @@ Inspect `src/00_vars.sh` and set the number of THREADS you want your machine to 
     Check `src/results/hisat2_summary.csv` to get a count of library depth and alignment rates. Individual library stats are under `results/bam/SRRXXX` flagstat and hisat2.log files.
 
 1. Run
-    > `source 01_common.sh && ./12_featurecounts.sh`
+    > `./12_featurecounts.sh`
 
     > `source 01_common.sh && ./13_parse_featurecounts.r`
 
