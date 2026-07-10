@@ -42,19 +42,22 @@ Inspect `src/00_vars.sh` and set the number of THREADS you want your machine to 
 
 1. Continue with
     > `./09_find_strandedness.sh`
+    
     > `./10_hisat2.sh`
+
     > `./11_get_hisat2_stats.sh`
 
     Check `src/results/hisat2_summary.csv` to get a count of library depth and alignment rates. Individual library stats are under `results/bam/SRRXXX` flagstat and hisat2.log files.
 
 1. Run
     > `source 01_common.sh && ./12_featurecounts.sh`
+
     > `source 01_common.sh && ./13_parse_featurecounts.r`
 
     to generate a counts matrix under `src/results/counts`
 
 1. Run
-        > `source 01_common.sh && ./14_wilcoxon.r` to run this analysis for NF vs DCM and generate results under `src/results/wilcoxon_de`
+    > `source 01_common.sh && ./14_wilcoxon.r` to run this analysis for NF vs DCM and generate results under `src/results/wilcoxon_de`
     
     Then, open `src/14_wilcoxon.r` manually. You will need to edit the source. Specifically, this block:
 
