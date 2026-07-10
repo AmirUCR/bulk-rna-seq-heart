@@ -1,4 +1,4 @@
-# bulk-rna-seq-heart
+# Bulk RNA-Seq for Public Heart Data
 Do not run `00_vars.sh` and `01_common.sh` manually.
 
 # Script order and execution
