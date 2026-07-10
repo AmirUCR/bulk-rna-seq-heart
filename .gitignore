@@ -1,0 +1,14 @@
+reads
+R03_grant_transcriptome
+genomic
+combined
+true_lncrna
+counts
+results/counts
+results/bam
+results/combined
+results/reads
+results/trimmed
+archive
+*.zip
+*.gtf
