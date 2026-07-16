@@ -1,6 +1,7 @@
 #!/usr/bin/env Rscript
 # Wilcoxon rank-sum DE: NF vs ICM/DCM.
-# Test/normalization logic follows Li et al. 2022 (Genome Biol 23:79).
+# Test/normalization logic follows Li et al. 2022 (Genome Biol 23:79)
+# https://rpubs.com/LiYumei/806213
 
 suppressWarnings(suppressMessages(library(edgeR)))
 
