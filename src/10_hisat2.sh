@@ -13,7 +13,7 @@ shopt -s nullglob
 fastq_files=("${READS_TRIM}"/*.fastq.gz)
 shopt -u nullglob
 
-declare -a JOBS=()
+declare -a jobs=()
 for f in "${fastq_files[@]}"; do
     base="$(basename "${f}")"
     case "${base}" in
@@ -25,27 +25,27 @@ for f in "${fastq_files[@]}"; do
             sample_id="${base%_1.fastq.gz}"
             r2="${READS_TRIM}/${sample_id}_2.fastq.gz"
             if [[ -f "${r2}" ]]; then
-                JOBS+=( "paired"$'\t'"${sample_id}"$'\t'"${f}"$'\t'"${r2}" )
+                jobs+=( "paired"$'\t'"${sample_id}"$'\t'"${f}"$'\t'"${r2}" )
             else
                 log "WARNING: ${base} has no _2 mate, treating as single-end"
-                JOBS+=( "single"$'\t'"${sample_id}"$'\t'"${f}" )
+                jobs+=( "single"$'\t'"${sample_id}"$'\t'"${f}" )
             fi
             ;;
         *.fastq.gz)
             sample_id="${base%.fastq.gz}"
-            JOBS+=( "single"$'\t'"${sample_id}"$'\t'"${f}" )
+            jobs+=( "single"$'\t'"${sample_id}"$'\t'"${f}" )
             ;;
     esac
 done
 
-NUM_SAMPLES="${#JOBS[@]}"
-if (( NUM_SAMPLES == 0 )); then
+num_samples="${#jobs[@]}"
+if (( num_samples == 0 )); then
     log "No samples found in ${READS_TRIM}" >&2
     exit 1
 fi
 
 # Create per-sample output directories.
-for job in "${JOBS[@]}"; do
+for job in "${jobs[@]}"; do
     IFS=$'\t' read -r layout sample_id r1 r2 <<< "${job}"
     mkdir -p "${SHARED_BAM_DIR}/${sample_id}"
 done
@@ -93,7 +93,7 @@ align() {
 }
 
 # —— Run
-for job in "${JOBS[@]}"; do
+for job in "${jobs[@]}"; do
     IFS=$'\t' read -r layout sample_id r1 r2 <<< "${job}"
     align \
         "${layout}" \
@@ -101,3 +101,5 @@ for job in "${JOBS[@]}"; do
         "${r2}" \
         "${SHARED_BAM_DIR}/${sample_id}/trimmed"
 done
+
+log "Done."

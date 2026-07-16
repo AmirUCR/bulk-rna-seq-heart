@@ -13,7 +13,7 @@ shopt -s nullglob
 fastq_files=("${READS_TRIM}"/*.fastq.gz)
 shopt -u nullglob
 
-declare -a JOBS=()
+declare -a jobs=()
 for f in "${fastq_files[@]}"; do
     base="$(basename "${f}")"
     case "${base}" in
@@ -25,21 +25,21 @@ for f in "${fastq_files[@]}"; do
             sample_id="${base%_1.fastq.gz}"
             r2="${READS_TRIM}/${sample_id}_2.fastq.gz"
             if [[ -f "${r2}" ]]; then
-                JOBS+=( "paired"$'\t'"${sample_id}"$'\t'"${f}"$'\t'"${r2}" )
+                jobs+=( "paired"$'\t'"${sample_id}"$'\t'"${f}"$'\t'"${r2}" )
             else
                 log "WARNING: ${base} has no _2 mate, treating as single-end"
-                JOBS+=( "single"$'\t'"${sample_id}"$'\t'"${f}" )
+                jobs+=( "single"$'\t'"${sample_id}"$'\t'"${f}" )
             fi
             ;;
         *.fastq.gz)
             sample_id="${base%.fastq.gz}"
-            JOBS+=( "single"$'\t'"${sample_id}"$'\t'"${f}" )
+            jobs+=( "single"$'\t'"${sample_id}"$'\t'"${f}" )
             ;;
     esac
 done
 
-if (( ${#JOBS[@]} == 0 )); then
-    echo "No samples found in ${READS_TRIM}" >&2
+if (( ${#jobs[@]} == 0 )); then
+    log "No samples found in ${READS_TRIM}" >&2
     exit 1
 fi
 
@@ -93,7 +93,7 @@ awk '$3 != "gene"' "${GTF}" | grep -v '^#' \
 
 # Strandedness is a library-prep property, so infer it from a single
 # representative sample rather than all of them.
-IFS=$'\t' read -r layout sample_id r1 r2 <<< "${JOBS[0]}"
+IFS=$'\t' read -r layout sample_id r1 r2 <<< "${jobs[0]}"
 log "Inferring strandedness from one sample: ${sample_id}"
 mkdir -p "${STRAND_DIR}/${sample_id}"
 process_sample "${layout}" "${sample_id}" "${r1}" "${r2}"

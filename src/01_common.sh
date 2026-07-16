@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set +o history  # Turn bash history recording off
-OLD_OPTS=$(set +o)
+old_opts=$(set +o)
 set -Eeuo pipefail
 
-COMMON_SH_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "${COMMON_SH_DIR}/00_vars.sh"
+common_sh_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${common_sh_dir}/00_vars.sh"
 
 log() {
     printf '[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*"
@@ -17,7 +17,7 @@ iterate_samples() {
 require_file() {
     local path="$1"
     if [[ ! -f "${path}" ]]; then
-        echo "Missing file: ${path}" >&2
+        log "Missing file: ${path}" >&2
         exit 1
     fi
 }
@@ -25,7 +25,7 @@ require_file() {
 require_dir() {
     local path="$1"
     if [[ ! -d "${path}" ]]; then
-        echo "Missing directory: ${path}" >&2
+        log "Missing directory: ${path}" >&2
         exit 1
     fi
 }
@@ -37,7 +37,7 @@ get_first_strandedness_file() {
         printf '%s\n' "${file}"
         return 0
     done
-    echo "No strandedness report found under ${STRAND_DIR}" >&2
+    log "No strandedness report found under ${STRAND_DIR}" >&2
     return 1
 }
 
@@ -51,7 +51,7 @@ parse_strandedness_fractions() {
     forward="$(grep -E '(1\+\+,1--,2\+-,2-\+|\+\+,--)' "${file}" | awk '{print $NF}')"
     reverse="$(grep -E '(1\+-,1-\+,2\+\+,2--|\+-,-\+)' "${file}" | awk '{print $NF}')"
     if [[ -z "${forward}" || -z "${reverse}" ]]; then
-        echo "Could not parse strandedness fractions from ${file}" >&2
+        log "Could not parse strandedness fractions from ${file}" >&2
         return 1
     fi
     printf '%s\t%s\n' "${forward}" "${reverse}"
@@ -94,5 +94,5 @@ infer_hisat2_strand() {
 
     export HISAT2_STRANDEDNESS
 }
-eval "$OLD_OPTS"
+eval "$old_opts"
 set -o history  # Turn bash history recording back on

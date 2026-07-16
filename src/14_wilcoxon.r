@@ -14,12 +14,10 @@ trt_grp  <- "DCM"    # group B
 fdrThres <- 0.05
 
 COUNTS_OUT <- Sys.getenv("COUNTS_OUT")
-counts_file <- file.path(COUNTS_OUT, "counts_se.txt")
+count_file <- file.path(COUNTS_OUT, "counts_se.csv")
 
 SHARED_DATA_DIR <- Sys.getenv("SHARED_DATA_DIR")
 samples_file <- file.path(SHARED_DATA_DIR, "samples.tsv")
-
-full_count_file <- file.path(COUNTS_OUT, "counts_se.csv")
 
 WILCOXON_OUT <- Sys.getenv("WILCOXON_OUT")
 out_file_format_name <- sprintf("%s_vs_%s.wilcoxon.csv", ref_grp, trt_grp)
@@ -28,7 +26,7 @@ output_file     <- file.path(WILCOXON_OUT, out_file_format_name)
 dir.create(dirname(output_file), showWarnings = FALSE, recursive = TRUE)
 
 ## ---- read ----------------------------------------------------------------
-readCount <- read.table(full_count_file, header = TRUE, row.names = 1, sep = ",",
+readCount <- read.table(count_file, header = TRUE, row.names = 1, sep = ",",
                         stringsAsFactors = FALSE, check.names = FALSE)
 meta <- read.table(samples_file, header = TRUE, stringsAsFactors = FALSE)
 if (!"sample" %in% colnames(meta) && "sample_id" %in% colnames(meta)) {

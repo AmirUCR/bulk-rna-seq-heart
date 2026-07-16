@@ -30,10 +30,12 @@ else
 fi
 
 # Download chrom sizes file
-if [ ! -f "${CHROM_SIZES}" ]; then
-    log "${CHROM_SIZES} not found. Downloading..." 
-    wget -P "${GENOMIC}" "${CHROM_SIZES_URL}"
-    gunzip "${CHROM_SIZES}.gz"
-else
-    log "${CHROM_SIZES} already exists. Skipping." 
-fi
+# if [ ! -f "${CHROM_SIZES}" ]; then
+#     log "${CHROM_SIZES} not found. Downloading..." 
+#     wget -P "${GENOMIC}" "${CHROM_SIZES_URL}"
+#     gunzip "${CHROM_SIZES}.gz"
+# else
+#     log "${CHROM_SIZES} already exists. Skipping." 
+# fi
+
+log "Done."

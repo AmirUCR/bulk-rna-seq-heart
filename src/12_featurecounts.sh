@@ -40,13 +40,14 @@ common_args=(
     -T "${THREADS}"
     -s "${FEATURE_COUNTS_STRANDEDNESS}"
     -a "${GTF}"
-    -Q 10
-    --extraAttributes "gene_name" 
+    --extraAttributes "gene_name"
 )
 
 if (( ${#pe_bams[@]} > 0 )); then
     log "featureCounts on ${#pe_bams[@]} paired-end BAMs"
-    featureCounts "${common_args[@]}" \
+    featureCounts \
+        "${common_args[@]}" \
+        "${FEATURECOUNTS_ARGS[@]}" \
         -p --countReadPairs -C \
         -o "${COUNTS_OUT}/counts_pe.txt" \
         "${pe_bams[@]}"
@@ -54,7 +55,11 @@ fi
 
 if (( ${#se_bams[@]} > 0 )); then
     log "featureCounts on ${#se_bams[@]} single-end BAMs"
-    featureCounts "${common_args[@]}" \
+    featureCounts \
+        "${common_args[@]}" \
+        "${FEATURECOUNTS_ARGS[@]}" \
         -o "${COUNTS_OUT}/counts_se.txt" \
         "${se_bams[@]}"
 fi
+
+log "Done."

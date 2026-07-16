@@ -8,12 +8,30 @@
 # Note:
 # - Paths are resolved relative to this file, not the caller's current directory.
 
+export THREADS=64
+export ENV="heart_env"
+export REF_URL="https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_50/GRCh38.primary_assembly.genome.fa.gz"
+export GTF_URL="https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_50/gencode.v50.primary_assembly.annotation.gtf.gz"
+# export CHROM_SIZES_URL="https://hgdownload.soe.ucsc.edu/goldenpath/hg38/bigZips/hg38.chrom.sizes"
+
+# Used in 09_find_strandedness
+export STRAND_THRESH=0.75
+
+# Used in 06_trim.sh
+export FASTP_ARGS=(
+    --length_required 25
+    --trim_poly_x
+    --poly_x_min_len 10
+)
+
+# Used in 12_featurecounts.sh
+export FEATURECOUNTS_ARGS=(
+    -Q 10
+)
+
+# --- PATHS ---
 export WORKFLOW_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export PROJECT_DIR="$(cd "${WORKFLOW_DIR}/.." && pwd)"
-
-export ENV="heart_env"
-export THREADS=64
-export STRAND_THRESH=0.75
 
 export LOCAL_DATA_DIR="${WORKFLOW_DIR}/data"
 export SHARED_DATA_DIR="${PROJECT_DIR}/data"
@@ -33,14 +51,10 @@ export SAMPLES_FILE="${SHARED_DATA_DIR}/samples.tsv"
 
 # REF
 export GENOMIC="${SHARED_DATA_DIR}/genomic"
-export DATASET="hg38"
-export REF_EXTENSION=".fa"
-export REF_URL="https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.gz"
-export GTF_URL="https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.v49.annotation.gtf.gz"
-export CHROM_SIZES_URL="https://hgdownload.soe.ucsc.edu/goldenpath/hg38/bigZips/hg38.chrom.sizes"
-export REF="${GENOMIC}/${DATASET}${REF_EXTENSION}"
-export GTF="${GENOMIC}/gencode.v49.annotation.gtf"
-export CHROM_SIZES="${GENOMIC}/${DATASET}.chrom.sizes"
+export DATASET="$(basename "${REF_URL}" .fa.gz)"
+export REF="${GENOMIC}/$(basename "${REF_URL}" .gz)"
+export GTF="${GENOMIC}/$(basename "${GTF_URL}" .gz)"
+# export CHROM_SIZES="${GENOMIC}/$(basename "${CHROM_SIZES_URL}")"
 
 # OUT
 export IDX_DIR="${GENOMIC}/hisat2_index"

@@ -21,7 +21,7 @@ for f in "${READS_UNTRIM}"/*.fastq.gz; do
 done
 shopt -u nullglob
 
-declare -a JOBS=()
+declare -a jobs=()
 for f in "${fastq_files[@]}"; do
     base="$(basename "${f}")"
     case "${base}" in
@@ -33,40 +33,40 @@ for f in "${fastq_files[@]}"; do
             sample_id="${base%_1.fastq.gz}"
             r2="${READS_UNTRIM}/${sample_id}_2.fastq.gz"
             if [[ -f "${r2}" ]]; then
-                JOBS+=( "paired"$'\t'"${sample_id}"$'\t'"${f}"$'\t'"${r2}" )
+                jobs+=( "paired"$'\t'"${sample_id}"$'\t'"${f}"$'\t'"${r2}" )
             else
                 log "WARNING: ${base} has no _2 mate, treating as single-end"
-                JOBS+=( "single"$'\t'"${sample_id}"$'\t'"${f}" )
+                jobs+=( "single"$'\t'"${sample_id}"$'\t'"${f}" )
             fi
             ;;
         *.fastq.gz)
             sample_id="${base%.fastq.gz}"
-            JOBS+=( "single"$'\t'"${sample_id}"$'\t'"${f}" )
+            jobs+=( "single"$'\t'"${sample_id}"$'\t'"${f}" )
             ;;
     esac
 done
 
-NUM_SAMPLES="${#JOBS[@]}"
-if (( NUM_SAMPLES == 0 )); then
+num_samples="${#jobs[@]}"
+if (( num_samples == 0 )); then
     log "No samples found in ${READS_UNTRIM}" >&2
     exit 1
 fi
 
 # Limit the number of concurrent FastQC jobs so total threads stay reasonable.
-MAX_JOBS="${NUM_SAMPLES}"
-if (( MAX_JOBS > THREADS )); then
-    MAX_JOBS="${THREADS}"
+max_jobs="${num_samples}"
+if (( max_jobs > THREADS )); then
+    max_jobs="${THREADS}"
 fi
 
-THREADS_PER_SAMPLE=$(( THREADS / MAX_JOBS ))
-if (( THREADS_PER_SAMPLE < 1 )); then
-    THREADS_PER_SAMPLE=1
+threads_per_sample=$(( THREADS / max_jobs ))
+if (( threads_per_sample < 1 )); then
+    threads_per_sample=1
 fi
 
 log "Total threads: ${THREADS}"
-log "Samples: ${NUM_SAMPLES}"
-log "Concurrent FastQC jobs: ${MAX_JOBS}"
-log "Threads per FastQC job: ${THREADS_PER_SAMPLE}"
+log "Samples: ${num_samples}"
+log "Concurrent FastQC jobs: ${max_jobs}"
+log "Threads per FastQC job: ${threads_per_sample}"
 
 run_fastqc_paired() {
     local sample_id="$1"
@@ -79,7 +79,7 @@ run_fastqc_paired() {
         "${r1}" \
         "${r2}" \
         -o "${READS_OUT_UNTRIM}/${sample_id}" \
-        -t "${THREADS_PER_SAMPLE}"
+        -t "${threads_per_sample}"
 }
 
 run_fastqc_single() {
@@ -91,11 +91,11 @@ run_fastqc_single() {
     fastqc \
         "${r1}" \
         -o "${READS_OUT_UNTRIM}/${sample_id}" \
-        -t "${THREADS_PER_SAMPLE}"
+        -t "${threads_per_sample}"
 }
 
 active_jobs=0
-for job in "${JOBS[@]}"; do
+for job in "${jobs[@]}"; do
     IFS=$'\t' read -r layout sample_id r1 r2 <<< "${job}"
 
     if [[ "${layout}" == "paired" ]]; then
@@ -105,7 +105,7 @@ for job in "${JOBS[@]}"; do
     fi
 
     ((active_jobs+=1))
-    if (( active_jobs >= MAX_JOBS )); then
+    if (( active_jobs >= max_jobs )); then
         wait
         active_jobs=0
     fi
@@ -118,3 +118,5 @@ multiqc \
     -o "${READS_OUT_UNTRIM}" \
     -f \
     --clean-up
+
+log "Done."
