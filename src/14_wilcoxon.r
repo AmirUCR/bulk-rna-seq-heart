@@ -19,7 +19,6 @@ count_file <- file.path(COUNTS_OUT, "counts_se.csv")
 SHARED_DATA_DIR <- Sys.getenv("SHARED_DATA_DIR")
 samples_file <- file.path(SHARED_DATA_DIR, "samples.tsv")
 
-
 WILCOXON_OUT <- Sys.getenv("WILCOXON_OUT")
 out_file_format_name <- sprintf("%s_vs_%s.wilcoxon.csv", ref_grp, trt_grp)
 output_file     <- file.path(WILCOXON_OUT, out_file_format_name)
