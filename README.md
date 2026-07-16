@@ -34,7 +34,7 @@ Inspect `src/00_vars.sh` and set the number of THREADS you want your machine to 
 
     When finished, inspect `src/results/reads/untrimmed/multiqc_report.html` and check if you want to do any trimming.
 
-1. Open `src/06_trim.sh` and inspect the `fastp` parameters. If you need to trim your reads, add the options here. For the heart dataset, these are single-end layout so the `run_fastp_single()` will run. Then run
+1. Open `src/06_trim.sh` and inspect the `fastp` parameters. If you need to trim your reads, add the options in `00_vars.sh` by modifying the `FASTP_ARGS` variable. For the heart dataset, these are single-end layout so the `run_fastp_single()` will run. Then run
     > `./06_trim.sh`
 
 1. Run
