@@ -10,31 +10,33 @@ log "Running ${0##*/}"
 # Create an output directory for FASTQs
 mkdir -p "${READS_UNTRIM}"
 
-while IFS= read -r ACC || [[ -n "${ACC}" ]]; do
+while IFS= read -r acc || [[ -n "${acc}" ]]; do
     # Skip empty lines or comments
-    [[ -z "${ACC}" || "${ACC}" =~ ^# ]] && continue
+    [[ -z "${acc}" || "${acc}" =~ ^# ]] && continue
 
     log "------------------------------------------------------"
-    log "Processing: ${ACC}"
+    log "Processing: ${acc}"
     log "------------------------------------------------------"
 
     # 1. Prefetch the data
     log "Starting prefetch..."
-    prefetch "${ACC}" --progress
+    prefetch "${acc}" --progress
 
     # 2. Extract to FASTQ
     # Using --split-3 to handle paired-end and single-end automatically
-    if fasterq-dump --split-3 --threads ${THREADS} --outdir "${READS_UNTRIM}" "${ACC}"; then
+    if fasterq-dump --split-3 --threads ${THREADS} --outdir "${READS_UNTRIM}" "${acc}"; then
         log "Compressing files..."
-        pigz "${READS_UNTRIM}"/"${ACC}"*.fastq
-        rm -f "${ACC}/${ACC}.sra"
-        rmdir "${ACC}" 2>/dev/null || true
+        pigz "${READS_UNTRIM}"/"${acc}"*.fastq
+        rm -f "${acc}/${acc}.sra"
+        rmdir "${acc}" 2>/dev/null || true
     else
-        log "FAILED: ${ACC}" >> "failed_${ACC}.txt"
+        log "FAILED: ${acc}" >> "failed_${acc}.txt"
     fi
 
-    log "Done with ${ACC}"
+    log "Done with ${acc}"
 done < "${ACCESSIONS_FILE}"
 
 log "------------------------------------------------------"
 log "Batch processing complete. Files are in ${READS_UNTRIM}"
+
+log "Done."
